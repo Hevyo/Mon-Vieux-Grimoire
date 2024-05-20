@@ -8,6 +8,9 @@ exports.createBook = (req, res, next) => {
     Book.findOne({title: bookObject.title, author: bookObject.author, year: bookObject.year})
     .then (book => {
         if (book) {
+                    fs.unlink(`images/${req.file.filename}`, (error) => {
+                        if(error) throw error
+                    })
             return res.status(409).json({message: 'Livre déjà enregistré'})
         }
         const newbook = new Book({
@@ -29,7 +32,7 @@ exports.getAllBooks = (req, res, next) => {
         }
     ).catch(
         (error) => {
-            res.status(400).json({error : error})
+            res.status(404).json({error : error})
         }
     )
 }
